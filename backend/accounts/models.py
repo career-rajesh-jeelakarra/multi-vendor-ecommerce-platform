@@ -1,10 +1,18 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+from .managers import CustomUserManager
 
 # Create your models here.
 
-class User(models.Model):
-    full_name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
+class User(AbstractUser):
+    CUSTOMER = "customer"
+    VENDOR = "vendor"
+    ADMIN = "admin"
 
-    def __str__(self):
-        return self.full_name
+    ROLE_CHOICES = [
+        (CUSTOMER,"Customer"),
+        (VENDOR,"Vendor"),
+        (ADMIN,"Admin"),
+    ]
+    role = models.CharField(max_length=20,choices=ROLE_CHOICES,default=CUSTOMER,)
+    objects = CustomUserManager()
